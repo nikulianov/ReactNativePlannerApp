@@ -1,42 +1,43 @@
 import React, { useEffect } from 'react'
-import { View, StyleSheet, FlatList } from 'react-native'
-import { DATA } from '../data'
-import { Post } from '../components/Post'
 import { HeaderButtons, Item } from 'react-navigation-header-buttons'
 import { AppHeaderIcon } from '../components/AppHeaderIcon'
-export const MainScreen = ({navigation}) => {
+import { PostList } from '../components/PostList'
+import {useDispatch,useSelector} from 'react-redux'
+import { loadPosts } from '../store/action/Post'
 
+export const MainScreen = ({navigation}) => {
   const postOpen = post =>{
-    navigation.navigate('Post',{postId:post.id,date:post.date})
+    navigation.navigate('Post',{postId:post.id,date:post.date,booked:post.booked})
   }
 
   useEffect(() => {
     navigation.setOptions({
-      headerRight:
-        () => (
+      // headerTitle: 'Главная',
+      headerRight: () => (
           <HeaderButtons HeaderButtonComponent={AppHeaderIcon}>
             <Item title={'Take photo'}
                   iconName={'ios-camera'}
-                  onPress={() => console.log('ggg')}
+                  onPress={() => navigation.navigate('Create')}
             />
           </HeaderButtons>
-        )
+        ),
+      headerLeft: () => (
+        <HeaderButtons HeaderButtonComponent={AppHeaderIcon}>
+          <Item title={'Take photo'}
+                iconName={'ios-menu'}
+                onPress={() => navigation.toggleDrawer()}
+          />
+        </HeaderButtons>
+      )
     })
   }, [])
 
-  return(
-    <View style={styles.wrapper}>
-      <FlatList data={DATA}
-                keyExtractor={post => post.id.toString()}
-                renderItem={({ item }) =><Post post={item} onPress={()=>postOpen(item)}/>}/>
+  const dispatch = useDispatch()
+  const allPosts = useSelector(state=>state.post.allPosts)
 
-    </View>
-  )
+  useEffect(()=>{
+    dispatch(loadPosts())
+  },[dispatch])
+
+  return <PostList data={allPosts} postOpen={postOpen}/>
 }
-
-const styles = StyleSheet.create({
-  wrapper: {
-    flex: 1,
-    padding: 10
-  }
-})

@@ -3,6 +3,8 @@ import { StyleSheet, Text, View } from 'react-native';
 import { AppLoading } from 'expo'
 import { bootstrap } from './src/bootstrap'
 import { AppNavigation } from './src/navigation/AppNavigation'
+import store from './src/store'
+import { Provider } from 'react-redux'
 
 export default function App() {
   let [idReady,setIsReady] = useState(false)
@@ -13,7 +15,11 @@ export default function App() {
       startAsync={bootstrap}
     />
   }
-  return <AppNavigation/>
+  return(
+  <Provider store={store}>
+    <AppNavigation/>
+  </Provider>
+  )
 }
 
 const styles = StyleSheet.create({

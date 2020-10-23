@@ -6,10 +6,9 @@ import { Ionicons } from '@expo/vector-icons'
 export const AppHeaderIcon = (props) => (
   <HeaderButton
     {...props}
-    size={34}
+    iconSize={25}
     IconComponent={Ionicons}
     color={Platform.OS === 'ios'?THEME.MAIN : '#fff'}
-
   >
 
   </HeaderButton>

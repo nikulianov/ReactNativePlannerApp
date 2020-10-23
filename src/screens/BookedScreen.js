@@ -1,18 +1,30 @@
-import React from 'react'
-import { Text, View, StyleSheet } from 'react-native'
+import React, { useEffect } from 'react'
+import { HeaderButtons, Item } from 'react-navigation-header-buttons'
+import { AppHeaderIcon } from '../components/AppHeaderIcon'
+import { PostList } from '../components/PostList'
+import { useSelector } from 'react-redux'
+export const BookedScreen = ({navigation}) => {
 
-export const BookedScreen = () => {
-  return(
-    <View style={styles.wrapper}>
-      <Text>BookedScreen</Text>
-    </View>
-  )
-}
-
-const styles=StyleSheet.create({
-  wrapper:{
-    flex:1,
-    justifyContent:'center',
-    alignItems:'center'
+  const postOpen = post =>{
+    navigation.navigate('Post',{postId:post.id,date:post.date,booked:post.booked})
   }
-})
+
+
+  useEffect(() => {
+    navigation.setOptions({
+      headerLeft: () => (
+        <HeaderButtons HeaderButtonComponent={AppHeaderIcon}>
+          <Item title={'Take photo'}
+                iconName={'ios-menu'}
+                onPress={() => navigation.toggleDrawer()}
+          />
+        </HeaderButtons>
+      )
+    })
+  }, [])
+
+  const bookedPost = useSelector(state=>state.post.bookedPost)
+
+  return <PostList data={bookedPost} postOpen={postOpen}/>
+
+}
